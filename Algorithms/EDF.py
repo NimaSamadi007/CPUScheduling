@@ -1,0 +1,2 @@
+def scheduleWithEDF(tasks):
+    pass
