@@ -1,6 +1,8 @@
-from Algorithms.EDF import scheduleWithEDF
-from Algorithms.FP import scheduleWithFP
-from Algorithms.RM import scheduleWithRM
+import numpy as np
+import matplotlib.pyplot as plt
+import FP
+import RM
+import EDF
 
 # gets input arguments and flags from the user
 def getInputFromUser():
@@ -10,31 +12,33 @@ def getInputFromUser():
 
     CiList = list(map(int, input("Enter C_i for all {} tasks respectively: \n".format(numberOfTasks)).split(" ")))
     TiList = list(map(int, input("Enter T_i for all {} tasks respectively: \n".format(numberOfTasks)).split(" ")))
-    DiList = list(map(int, input("Enter D_i for all {} tasks respectively: \n".format(numberOfTasks)).split(" ")))
+    #DiList = list(map(int, input("Enter D_i for all {} tasks respectively: \n".format(numberOfTasks)).split(" ")))
 
     for i in range(numberOfTasks):
         listOfTasks.append({
             "C" : CiList[i], 
             "T" : TiList[i], 
-            "D" : DiList[i]
+#            "D" : DiList[i]
+            "D" : 0
         })
 
-    algMethod = input("What scheduling algorithm do you want to use? (FP, RM, EDF): ")
+#    algMethod = input("What scheduling algorithm do you want to use? (FP, RM, EDF): ")
+    algMethod = "FP"
     return (listOfTasks, algMethod)
 
 # calculates timing based on the input flags
 # and returns one-hot array showing each jobs time
-def calTiming(listOfTasks, algMethod):
+def calProcessorUtilization(listOfTasks, algMethod):
     if algMethod == "FP":
-        timingLists = scheduleWithFP(listOfTasks)
+        processorUtilization = FP.scheduleWithFP(listOfTasks)
     elif algMethod == "RM":
-        timingLists = scheduleWithRM(listOfTasks)
+        processorUtilization = RM.scheduleWithRM(listOfTasks)
     elif algMethod == "EDF":
-        timingLists = scheduleWithEDF(listOfTasks)
+        processorUtilization = EDF.scheduleWithEDF(listOfTasks)
     else:
         raise ValueError("Unknown scheduling method inserted - must be one of FP, RM, or EDF")
 
-    return timingLists
+    return processorUtilization
 
 # plots the timing result
 def plotResult(timingLists):
@@ -43,8 +47,10 @@ def plotResult(timingLists):
 # main function handling whole structure
 def main():
     listOfTasks, algMethod = getInputFromUser()
-    timingLists = calTiming(listOfTasks, algMethod)
-    plotResult(timingLists)
+    processorUtilization = calProcessorUtilization(listOfTasks, algMethod)
+
+    print(processorUtilization)
+    #plotResult(timingLists)
 
 ######
 # SIMPLE TEST:
