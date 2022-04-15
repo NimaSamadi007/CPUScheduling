@@ -15,13 +15,13 @@ def scheduleWithFP(tasks):
     # Find the response time of the lowest priority task
     totalTime = calResposeTime(numOfTasks-1, tasks)
     if totalTime == -1:
-        print("Non-Schedulable!")
+        print("Non-Schedulable! Examine the timing plot")
         periods = []
         for t in range(numOfTasks):
             periods.append(tasks[t]["T"])
         totalTime = np.lcm.reduce(periods) # consider LCM as the total time
     elif totalTime > tasks[numOfTasks-1]["T"]: # response time exceeds the issue time
-        print("Non-Schedulable!")
+        print("Non-Schedulable! Examine the timing plot")
 
     # compute issue times and set them on the time axis
     issueTimeList = utl.setPeriodsOnAxis(tasks, totalTime)
