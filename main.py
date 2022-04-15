@@ -26,13 +26,24 @@ def getInputFromUser():
 # and returns one-hot array showing each jobs time
 def calProcessorUtilization(listOfTasks, algMethod):
     if algMethod == "RMFP":
+        listOfTasks = sortTasksForRM(listOfTasks)
         processorUtilization = RMFP.scheduleWithFP(listOfTasks)
     elif algMethod == "EDF":
         processorUtilization = EDF.scheduleWithEDF(listOfTasks)
     else:
         raise ValueError("Unknown scheduling method inserted - must be one of FP, RM, or EDF")
 
-    return processorUtilization
+    return listOfTasks, processorUtilization
+
+# sort list of tasks based on their period
+def sortTasksForRM(tasks):
+    newListOfTasks = []
+    periods = [t["T"] for t in tasks]
+    indices = np.argsort(periods)
+    for index in indices:
+        newListOfTasks.append(tasks[index])
+
+    return newListOfTasks
 
 # plots the timing result
 def plotResult(timingLists, tasks, algMode):
@@ -45,18 +56,17 @@ def plotResult(timingLists, tasks, algMode):
         xRanges = computeXRanges(timingLists[i])
         yRange = (yMax - 10*i, width)
         yticksValues.append(yMax - 10*i + width / 2)
-        yticksLabels.append("Task{}".format(i+1))
+        yticksLabels.append("Task{} (C={}, T={})".format(i+1, tasks[i]["C"], tasks[i]["T"]))
         ax.broken_barh(xRanges, yRange)
         periodDevidend = utl.calMultiplesOfPeriod(timingLists.shape[1], tasks[i]["T"])
         ax.vlines(x=periodDevidend, ymin = yMax - 10*i - width/2, ymax = yMax - 10*i + 3*width/2, ls='--', colors='red', lw=2)
 
     ax.set_yticks(yticksValues)
-    ax.set_yticklabels(yticksLabels)
+    ax.set_yticklabels(yticksLabels, rotation=45)
     ax.set_xticks(np.arange(0, timingLists.shape[1]+1))
     ax.grid(True)
     ax.set_title('RealTime scheduling by {} method'.format(algMode))
     ax.set_xlabel('Time')
-    ax.set_ylabel('Tasks')
 
     plt.show()
 
@@ -99,7 +109,7 @@ def convertUtlizationToTiming(procUtilization, numOfTasks):
 # main function handling whole structure
 def main():
     listOfTasks, algMethod = getInputFromUser()
-    processorUtilization = calProcessorUtilization(listOfTasks, algMethod)
+    listOfTasks, processorUtilization = calProcessorUtilization(listOfTasks, algMethod)
     timingLists = convertUtlizationToTiming(processorUtilization, len(listOfTasks))
     print("This is how tasks are scheduled: ")
     for i in range(timingLists.shape[0]):
