@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import utils as utl
 import RMFP
 import EDF
 
@@ -46,7 +47,7 @@ def plotResult(timingLists, tasks, algMode):
         yticksValues.append(yMax - 10*i + width / 2)
         yticksLabels.append("Task{}".format(i+1))
         ax.broken_barh(xRanges, yRange)
-        periodDevidend = calMultiplesOfPeriod(timingLists.shape[1], tasks[i]["T"])
+        periodDevidend = utl.calMultiplesOfPeriod(timingLists.shape[1], tasks[i]["T"])
         ax.vlines(x=periodDevidend, ymin = yMax - 10*i - width/2, ymax = yMax - 10*i + 3*width/2, ls='--', colors='red', lw=2)
 
     ax.set_yticks(yticksValues)
@@ -59,12 +60,6 @@ def plotResult(timingLists, tasks, algMode):
 
     plt.show()
 
-def calMultiplesOfPeriod(totalTime, period):
-    periodMultiples = []
-    for i in range(totalTime+1):
-        if i % period == 0:
-            periodMultiples.append(i)
-    return periodMultiples
 
 # computing ranges of contigous ones for plotting from the give list
 def computeXRanges(inputList):
@@ -96,7 +91,8 @@ def computeXRanges(inputList):
 def convertUtlizationToTiming(procUtilization, numOfTasks):
     timingLists = np.zeros((numOfTasks, len(procUtilization)), dtype=int)
     for i in range(len(procUtilization)):
-        timingLists[procUtilization[i]-1, i] = 1
+        if (procUtilization[i] > 0): # if there is a job to be done
+            timingLists[procUtilization[i]-1, i] = 1
     
     return timingLists
 

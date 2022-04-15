@@ -12,6 +12,13 @@ MAX_NUM_OF_ITERATION = 10000
 # has the highest priority among others.
 def scheduleWithFP(tasks):
     numOfTasks = len(tasks)
+    # check if utilization is less than or equal 1:
+    utiliz = utl.calUtilization(tasks)
+    if utiliz > 1:
+        print("Non-schedulable! utilization is: {}".format(utiliz))
+    else:
+        print("Processor Utilization: {}".format(utiliz))
+
     # Find the response time of the lowest priority task
     totalTime = calResposeTime(numOfTasks-1, tasks)
     if totalTime == -1:
@@ -33,16 +40,13 @@ def scheduleWithFP(tasks):
 
     for t in range(totalTime):
         taskIndex = highestRemainingTask(computationValues)
-        computationValues[taskIndex] -= 1 # subtract 1 computation unit
-        processorUtilization[t] = taskIndex + 1 # At time t, task "taskIndex + 1" must be run
-        updateComputationValues(computationValues, issueTimeList, tasks, t+1) # update computationValues for next iteration
+        if taskIndex != -1:
+            computationValues[taskIndex] -= 1 # subtract 1 computation unit
+            processorUtilization[t] = taskIndex + 1 # At time t, task "taskIndex + 1" must be run
+        utl.updateComputationValues(computationValues, issueTimeList, tasks, t+1) # update computationValues for next iteration
 
     return processorUtilization
 
-def updateComputationValues(computationValues, issueTimeList, tasks, time):
-    for i in range(len(tasks)):
-        if issueTimeList[i, time] == 1: # Task i is issueing at "time"
-            computationValues[i] += tasks[i]["C"]
 
 def highestRemainingTask(computationValues):
     for i in range(len(computationValues)):

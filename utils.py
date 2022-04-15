@@ -10,3 +10,20 @@ def setPeriodsOnAxis(tasks, totalTime):
 
     return issueTimeList
 
+def calMultiplesOfPeriod(totalTime, period):
+    periodMultiples = []
+    for i in range(totalTime+1):
+        if i % period == 0:
+            periodMultiples.append(i)
+    return periodMultiples
+
+def updateComputationValues(computationValues, issueTimeList, tasks, time):
+    for i in range(len(tasks)):
+        if issueTimeList[i, time] == 1: # Task i is issueing at "time"
+            computationValues[i] += tasks[i]["C"]
+
+def calUtilization(tasks):
+    utilization = 0
+    for i in range(len(tasks)):
+        utilization += (tasks[i]["C"] / tasks[i]["T"])
+    return utilization
