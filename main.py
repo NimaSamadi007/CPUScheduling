@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import FP
-import RM
+import RMFP
 import EDF
 
 # gets input arguments and flags from the user
@@ -19,17 +18,14 @@ def getInputFromUser():
             "T" : TiList[i], 
         })
 
-#    algMethod = input("What scheduling algorithm do you want to use? (FP, RM, EDF): ")
-    algMethod = "FP"
+    algMethod = input("What scheduling algorithm do you want to use? (RMFP, EDF): ")
     return (listOfTasks, algMethod)
 
 # calculates timing based on the input flags
 # and returns one-hot array showing each jobs time
 def calProcessorUtilization(listOfTasks, algMethod):
-    if algMethod == "FP":
-        processorUtilization = FP.scheduleWithFP(listOfTasks)
-    elif algMethod == "RM":
-        processorUtilization = RM.scheduleWithRM(listOfTasks)
+    if algMethod == "RMFP":
+        processorUtilization = RMFP.scheduleWithFP(listOfTasks)
     elif algMethod == "EDF":
         processorUtilization = EDF.scheduleWithEDF(listOfTasks)
     else:
