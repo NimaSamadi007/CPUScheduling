@@ -27,7 +27,7 @@ Task3:  [0 0 0 0 1 0 0 1 1 0 0 0 0 1 1]
 Plotting results...
 ```
 This is the result of scheduling:
-![result](./imgs/Figure_1.png)
+![result](./imgs/Figure_1.svg)
 
 As you can see it is schedulable!
 
