@@ -50,7 +50,7 @@ Plotting results...
 ```
 
 And this is timing diagram:
-![result2](./imgs/Figure_2.png)
+![result2](./imgs/Figure_2.svg)
 
 Notice that the code supposes the deadline of each task is equal to its period. 
 
